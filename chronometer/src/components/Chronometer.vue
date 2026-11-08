@@ -1,8 +1,9 @@
 <script setup>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 const time = ref(0);
 const isRunning = ref(false);
 const intervalId = ref(null);
+
 function startTimer() {
   if (isRunning.value) {
     return;
@@ -16,6 +17,15 @@ function pauseTimer() {
   clearInterval(intervalId.value);
   isRunning.value = false
 }
+const seconde = computed(()=>{
+    return Math.floor( time.value % 60 )
+})
+const minutes = computed(()=>{
+    return Math.floor( (time.value / 60) % 60 )
+})
+const hours =  computed(()=>{
+    return Math.floor( (time.value / 3600) % 60 )
+})
 </script>
 <template>
   <div
@@ -23,7 +33,7 @@ function pauseTimer() {
   >
     <!-- EN TÊTE -->
     <div>
-      <span class="text-7xl">{{ time }}</span>
+      <span class="text-7xl">{{ String(hours).padStart(2,'0')}} : {{ String(minutes).padStart(2,'0') }} : {{ String(seconde).padStart(2,'0') }}</span>
     </div>
     <!-- CONTROL -->
     <div>
