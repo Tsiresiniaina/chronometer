@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref } from "vue";
-const time = ref(0);
+const milliseconde = ref(0);
 const isRunning = ref(false);
 const intervalId = ref(null);
 
@@ -10,21 +10,24 @@ function startTimer() {
   }
   isRunning.value = true;
   intervalId.value = setInterval(() => {
-    time.value++;
-  }, 1000);
+    milliseconde.value += 10;
+  }, 10);
 }
-function pauseTimer() {
+function pausemilliseconder() {
   clearInterval(intervalId.value);
   isRunning.value = false
 }
+const ms = computed(() => {
+  return Math.floor((milliseconde.value % 1000) / 10);
+});
 const seconde = computed(()=>{
-    return Math.floor( time.value % 60 )
+    return Math.floor( (milliseconde.value/1000) % 60 )
 })
 const minutes = computed(()=>{
-    return Math.floor( (time.value / 60) % 60 )
+    return Math.floor( (milliseconde.value / 60000) % 60 )
 })
 const hours =  computed(()=>{
-    return Math.floor( (time.value / 3600) % 60 )
+    return Math.floor( (milliseconde.value / 3600000) % 60 )
 })
 </script>
 <template>
@@ -33,7 +36,8 @@ const hours =  computed(()=>{
   >
     <!-- EN TÊTE -->
     <div>
-      <span class="text-7xl">{{ String(hours).padStart(2,'0')}} : {{ String(minutes).padStart(2,'0') }} : {{ String(seconde).padStart(2,'0') }}</span>
+      <span class="text-5xl">{{ String(hours).padStart(2,'0')}} : {{ String(minutes).padStart(2,'0') }} 
+        : {{ String(seconde).padStart(2,'0') }} : {{ String(ms).padStart(2,'0') }}</span>
     </div>
     <!-- CONTROL -->
     <div>
@@ -46,7 +50,7 @@ const hours =  computed(()=>{
         </button>
         <button
           class="p-2 rounded-md bg-blue-100 cursor-pointer"
-          @click="pauseTimer"
+          @click="pausemilliseconder"
         >
           <span class="tracking-[3px]">PAUSE</span>
         </button>
