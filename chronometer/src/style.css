@@ -1,4 +1,14 @@
-:root {
+@import "tailwindcss";
+/* body{
+  background-color: aquamarine;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+} */
+/* :root {
   --text: #6b6375;
   --text-h: #08060d;
   --bg: #fff;
@@ -293,4 +303,4 @@ code {
     right: 0;
     border-right-color: var(--border);
   }
-}
+} */
