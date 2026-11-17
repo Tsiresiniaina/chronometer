@@ -37,11 +37,10 @@ function pauseTimer() {
   isRunning.value = false;
 }
 function resetTimer() {
-    pauseTimer();
   time.value = 0;
   laps.value = [];
-  previousLapTime.value = 0;
-  intervalId.value = null;
+  pauseTimer();
+  previousLapTime = 0;
 }
 function formatLapTime(lapTime) {
   let stringTime = "";
@@ -64,33 +63,32 @@ const minutes = computed(() => {
 const hours = computed(() => {
   return Math.floor((time.value / 3600000) % 60);
 });
-
 </script>
 
 <template>
   <div
-    class="w-full max-w-xl mx-auto bg-[#11111B] rounded-2xl p-5 sm:p-6 shadow-2xl border border-white/10 flex flex-col gap-6"
+    class="w-full max-w-xl mx-auto bg-[#F4ECD7] rounded-2xl p-5 sm:p-6 shadow-2xl border border-white/10 flex flex-col gap-6"
   >
     <!-- AFFICHAGE DU TEMPS -->
-    <div class="bg-[#1C1B2B] rounded-2xl p-5 sm:p-7 border border-white/5">
+    <div class="bg-[#FCF5EB] rounded-2xl p-5 sm:p-7 border border-white/5">
       <p class="text-center text-gray-500 text-xs tracking-[0.2em] mb-4">
         TEMPS ÉCOULÉ
       </p>
 
       <div
-        class="flex items-center justify-center font-mono font-bold text-3xl sm:text-5xl text-white tracking-tight tabular-nums whitespace-nowrap"
+        class="flex items-center justify-center font-mono font-bold text-3xl sm:text-5xl text-[#1D1814] tracking-tight tabular-nums whitespace-nowrap"
       >
         <span>{{ String(hours).padStart(2, "0") }}</span>
-        <span class="text-gray-600 mx-1">:</span>
+        <span class="text-gray-300 mx-1">:</span>
         <span>{{ String(minutes).padStart(2, "0") }}</span>
-        <span class="text-gray-600 mx-1">:</span>
+        <span class="text-gray-300 mx-1">:</span>
         <span>{{ String(seconde).padStart(2, "0") }}</span>
-        <span class="text-[#AA00FF] mx-1">.</span>
-        <span class="text-[#C77AFF]">{{ String(ms).padStart(2, "0") }}</span>
+        <span class="text-[#AF7748] mx-1">.</span>
+        <span class="text-[#AF7748]">{{ String(ms).padStart(2, "0") }}</span>
       </div>
       <div class="flex justify-center mt-5">
         <span
-          class="text-xs text-purple-300 bg-purple-500/10 px-3 py-1 rounded-full"
+          class="text-xs text-[#AF855B] bg-[#F0E6DD] px-3 py-1 rounded-full"
         >
           {{ isRunning ? "Chronomètre en cours" : "En attente" }}
         </span>
@@ -102,7 +100,7 @@ const hours = computed(() => {
       <button
         @click="startTimer"
         :disabled="isRunning"
-        class="flex flex-col items-center gap-2 p-3 rounded-xl bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+        class="flex flex-col items-center gap-2 p-3 rounded-xl cursor-pointer bg-[#af7748] text-[#FCF5EB] hover:bg-[#d18954] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
       >
         <Play :size="22" />
         <span class="text-xs font-medium">Start</span>
@@ -111,7 +109,7 @@ const hours = computed(() => {
       <button
         @click="pauseTimer"
         :disabled="!isRunning"
-        class="flex flex-col items-center gap-2 p-3 rounded-xl bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+        class="flex flex-col items-center gap-2 p-3 rounded-xl cursor-pointer bg-[#af7748] text-[#FCF5EB] hover:bg-[#d18954] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
       >
         <Pause :size="22" />
         <span class="text-xs font-medium">Pause</span>
@@ -120,7 +118,7 @@ const hours = computed(() => {
       <button
         @click="addLap"
         :disabled="!isRunning"
-        class="flex flex-col items-center gap-2 p-3 rounded-xl bg-purple-500/10 text-purple-400 hover:bg-purple-500/20 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+        class="flex flex-col items-center gap-2 p-3 rounded-xl cursor-pointer bg-[#af7748] text-[#FCF5EB] hover:bg-[#d18954] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
       >
         <Flag :size="22" />
         <span class="text-xs font-medium">Lap</span>
@@ -128,7 +126,7 @@ const hours = computed(() => {
 
       <button
         @click="resetTimer"
-        class="flex flex-col items-center gap-2 p-3 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-all"
+        class="flex flex-col items-center gap-2 p-3 rounded-xl cursor-pointer bg-[#af7748] text-[#FCF5EB] hover:bg-[#d18954] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
       >
         <RotateCcw :size="22" />
         <span class="text-xs font-medium">Reset</span>
@@ -138,23 +136,18 @@ const hours = computed(() => {
     <!-- LISTE DES TOURS -->
     <div
       v-if="laps.length"
-      class="bg-[#1C1B2B] rounded-2xl border border-white/5 overflow-hidden"
+      class="bg-[#FCF5EB] rounded-2xl border border-white/5 overflow-hidden"
     >
       <!-- HEADER DE LA LISTE -->
       <div
         class="flex items-center justify-between p-4 border-b border-white/5"
       >
         <div class="flex items-center gap-3">
-          <!-- <div
-            class="w-9 h-9 rounded-xl bg-[#AA00FF]/15 flex items-center justify-center text-[#C77AFF]"
-          >
-            <Flag :size="18" />
-          </div> -->
           <div>
-            <h3 class="text-white font-semibold text-sm">
+            <h3 class="text-[#AF7748] font-semibold text-sm">
               Historique des tours
             </h3>
-            <p v-if="laps.length == 1" class="text-gray-500 text-xs">
+            <p v-if="laps.length == 1" class="text-gray-400 text-xs">
               {{ laps.length }} tour enregistré
             </p>
             <p v-else class="text-gray-500 text-xs">
@@ -162,44 +155,44 @@ const hours = computed(() => {
             </p>
           </div>
         </div>
-
       </div>
 
       <!-- TABLEAU -->
-      <div class="overflow-x-auto">
+      <div class="max-h-65 overflow-y-auto scroll-smooth scrollbar-thin scrollbar-thumb-[#D8BD9E]">
         <table class="w-full text-sm text-left">
-          <thead
-            class="bg-[#252438] text-gray-500 text-[11px] uppercase tracking-wider"
-          >
+          <thead class="sticky top-0 z-20 bg-[#FCF5EB] text-gray-400 text-[11px] uppercase tracking-wider">
             <tr>
-              <th class="px-4 py-3 font-medium">{{laps.length == 1 ? 'TOUR' : "TOURS" }}</th>
+              <th class="px-4 py-3 font-medium">
+                {{ laps.length == 1 ? "TOUR" : "TOURS" }}
+              </th>
               <th class="px-4 py-3 font-medium text-center">Temps du tour</th>
               <th class="px-4 py-3 font-medium text-right">Temps total</th>
             </tr>
           </thead>
-
           <tbody>
             <tr
               v-for="lap in [...laps].reverse()"
               :key="lap.lapGrade"
-              class="border-t border-white/5 hover:bg-purple-500/5 transition-colors"
+              class="group/ligne border-t border-white/5 hover:bg-[#AF7748] transition-colors cursor-pointer"
             >
               <td class="px-4 py-3">
                 <span
-                  class="w-7 h-7 inline-flex items-center justify-center rounded-lg bg-white/5 text-gray-300 text-xs font-semibold"
+                  class="w-7 h-7 inline-flex items-center justify-center 
+                  rounded-lg text-[#AF7748] group-hover/ligne:text-[#FCF5EB] text-xs font-bold"
                 >
                   {{ lap.lapGrade }}
                 </span>
               </td>
 
               <td
-                class="px-4 py-3 text-center font-mono font-semibold text-[#C77AFF] tabular-nums"
+                class="px-4 py-3 text-center font-mono font-semibold text-[#AF7748]
+                 group-hover/ligne:text-[#FCF5EB] tabular-nums"
               >
                 {{ formatLapTime(lap.lapTime) }}
               </td>
-
               <td
-                class="px-4 py-3 text-right font-mono text-gray-400 tabular-nums"
+                class="px-4 py-3 text-right font-mono text-[#AF7748] 
+                group-hover/ligne:text-[#FCF5EB] tabular-nums"
               >
                 {{ formatLapTime(lap.totalTime) }}
               </td>
@@ -208,15 +201,13 @@ const hours = computed(() => {
         </table>
       </div>
     </div>
-
     <!-- ÉTAT VIDE -->
     <div
       v-else
-      class="flex flex-col items-center justify-center py-5 text-gray-600"
+      class="flex flex-col items-center justify-center py-5 text-gray-400"
     >
-      <Flag :size="25" class="mb-2 opacity-40" />
       <p class="text-sm">Aucun tour enregistré</p>
-      <p class="text-xs mt-1">Appuie sur Flag pour enregistrer un tour</p>
+      <p class="text-xs mt-1">Appuie sur Lap pour enregistrer un tour</p>
     </div>
   </div>
 </template>

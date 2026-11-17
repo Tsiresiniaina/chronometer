@@ -1,4 +1,7 @@
 @import "tailwindcss";
+:root{
+  --background : #FBF6F2
+}
 /* body{
   background-color: aquamarine;
   margin: 0;
