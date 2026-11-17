@@ -1,6 +1,7 @@
 <script setup>
-import { computed, ref } from "vue";
-import { Play, Pause, Flag, RotateCcw, Timer } from "@lucide/vue";
+import { computed, onBeforeUnmount, ref } from "vue";
+import { Play, Pause, Flag, RotateCcw, } from "@lucide/vue";
+import { build } from "vite";
 const time = ref(0);
 const isRunning = ref(false);
 const intervalId = ref(null);
@@ -9,12 +10,13 @@ const intervalId = ref(null);
 const laps = ref([]);
 
 let previousLapTime = 0;
+let startedAt = 0;
 
 function addLap() {
+  if(!isRunning.value){
+    return
+  }
   const lapTime = time.value - previousLapTime;
-  console.log("Temps actuel :", time.value);
-  console.log("Tour précédent :", previousLapTime);
-  console.log("Temps du tour :", lapTime);
   const objectLap = {
     lapGrade: laps.value.length + 1,
     lapTime: lapTime,
@@ -28,12 +30,18 @@ function startTimer() {
     return;
   }
   isRunning.value = true;
+  //Permet de reprendre là où était réellement après une pause
+  startedAt = performance.now() - time.value
   intervalId.value = setInterval(() => {
-    time.value += 10;
+    time.value = performance.now() - startedAt;
   }, 10);
 }
 function pauseTimer() {
+  if(!isRunning.value){
+    return
+  }
   clearInterval(intervalId.value);
+  intervalId.value=null
   isRunning.value = false;
 }
 function resetTimer() {
@@ -63,8 +71,10 @@ const minutes = computed(() => {
 const hours = computed(() => {
   return Math.floor((time.value / 3600000) % 60);
 });
+onBeforeUnmount(()=>{
+  clearInterval(intervalId.value)
+})
 </script>
-
 <template>
   <div
     class="w-full max-w-xl mx-auto bg-[#F4ECD7] rounded-2xl p-5 sm:p-6 shadow-2xl border border-white/10 flex flex-col gap-6"
