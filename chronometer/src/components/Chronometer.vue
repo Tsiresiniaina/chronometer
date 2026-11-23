@@ -1,7 +1,7 @@
 <script setup>
 import { computed, onBeforeUnmount, ref } from "vue";
-import { Play, Pause, Flag, RotateCcw, } from "@lucide/vue";
-import { build } from "vite";
+import { Play, Pause, Flag, RotateCcw, } from "lucide-vue-next";
+
 const time = ref(0);
 const isRunning = ref(false);
 const intervalId = ref(null);
